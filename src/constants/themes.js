@@ -1,9 +1,9 @@
-export default theme = {
+export default themes = {
     colors: {
         white: '#fff',
         black: '#000',
         grayBG: '#e5e5e5',
-        neutral: (opacity) => 'rgba(10, 10, 10, ${opacity})',
+        neutral: (opacity) => `rgba(10, 10, 10, ${opacity})`,
     },
     fontWeights: {
         medium: '500',
