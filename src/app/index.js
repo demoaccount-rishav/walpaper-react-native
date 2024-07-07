@@ -7,7 +7,7 @@ import themes from '@/constants/themes'
 import { router, Redirect } from 'expo-router';
 
 export default function WelcomeScreen() {
-  // return <Redirect href="/home" />;
+  return <Redirect href="/home" />;
 
   return (
     <View style={[designs.container,]}>
