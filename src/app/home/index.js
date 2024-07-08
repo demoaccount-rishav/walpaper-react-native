@@ -41,7 +41,7 @@ export default function index() {
         } else {
 
         }
-        console.log('results: ', res.data.hits[0]);
+        // console.log('results: ', res.data.hits[0]);
     }
 
     return (
@@ -51,7 +51,7 @@ export default function index() {
             <View style={designs.header}>
                 <Pressable>
                     <Text style={designs.title}>
-                        Walpy
+                        Pixabay
                     </Text>
                 </Pressable>
                 <Pressable>
@@ -87,7 +87,9 @@ export default function index() {
 
                 <View>
                     {
-                        images.length > 0 && <ImageGridComponent images={images} />
+                        images.length > 0 && (
+                            <ImageGridComponent images={images} />
+                        )
                     }
                 </View>
             </ScrollView>
@@ -140,8 +142,5 @@ const designs = StyleSheet.create({
         borderRadius: themes.radius.lg,
 
     },
-    // categories:{
-    //     height: 10,
-    //     width: 10
-    // },
+    
 })

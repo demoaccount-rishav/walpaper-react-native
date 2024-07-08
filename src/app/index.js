@@ -27,7 +27,7 @@ export default function WelcomeScreen() {
         <View style={designs.contentContainer}>
 
           <Animated.Text entering={FadeInDown.delay(600)} style={designs.title}>
-            Walpy
+            Pixabay
           </Animated.Text >
 
           <Animated.Text entering={FadeInDown.delay(700)} style={designs.punchLine}>

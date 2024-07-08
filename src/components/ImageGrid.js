@@ -25,7 +25,7 @@ export default function ImageGridComponent({ images }) {
 }
 
 const designs = StyleSheet.create({
-    new: {
+    container: {
         minHeight: 3,
         width: widthPercentage(100),
     },

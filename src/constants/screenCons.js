@@ -18,3 +18,13 @@ export const getCoulumnCount = () => {
         return 2;
     }
 }
+
+export const getImageSize = (imageWidth, imageHeight) => {
+    if (imageWidth > imageHeight) {
+        return 250;
+    } else if (imageHeight > imageWidth) {
+        return 300;
+    } else {
+        return 200;
+    }
+}   
