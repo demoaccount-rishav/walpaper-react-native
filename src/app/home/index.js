@@ -1,23 +1,47 @@
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { FontAwesome6, AntDesign, Octicons } from '@expo/vector-icons';
 import themes from '@/constants/themes';
 import { heightPercentage, widthPercentage } from '@/constants/screenCons';
 import CategoriesComponent from '@/components/categories';
+import CALL_PIXABAY_API from '../../../api/pixabayAPI';
+import ImageGridComponent from '@/components/ImageGrid';
 
 export default function index() {
 
     const top = useSafeAreaInsets().top;
     const paddingTop = top > 0 ? top + 10 : 30;
+
     const [searchText, setsearchText] = useState("");
-    const searchInputRef = useRef(null);
+    const [images, setimages] = useState([]);
     const [activeCategory, setactiveCategory] = useState(null);
 
+    const searchInputRef = useRef(null);
+
     console.log('Active Category', activeCategory);
-    
+
     const handleChangeCategory = (category) => {
         setactiveCategory(category);
+    }
+
+    useEffect(() => {
+        fetchImages();
+    }, [])
+
+
+    const fetchImages = async (params = { page: 1 }, append = false) => {
+        let res = await CALL_PIXABAY_API(params);
+        if (res.success && res.data?.hits) {
+            if (images.length > 0) {
+                setimages([...images, res.data.hits])
+            } else {
+                setimages([...res.data.hits])
+            }
+        } else {
+
+        }
+        console.log('results: ', res.data.hits[0]);
     }
 
     return (
@@ -61,10 +85,12 @@ export default function index() {
                     />
                 </View>
 
+                <View>
+                    {
+                        images.length > 0 && <ImageGridComponent images={images} />
+                    }
+                </View>
             </ScrollView>
-
-
-
         </View>
     )
 }

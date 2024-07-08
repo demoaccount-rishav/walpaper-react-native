@@ -11,7 +11,8 @@ export default function CategoriesComponent({ activeCategory, handleChangeCatego
       <FlatList
         data={categoriesList}
         horizontal
-        contentContainerStyle={designs.flatlistContainer} showsHorizontalScrollIndicator={true}
+        contentContainerStyle={designs.flatlistContainer}
+        showsHorizontalScrollIndicator={true}
         keyExtractor={item => item}
         renderItem={({ item, index }) => (
           <CategoryItemComponent
@@ -19,7 +20,6 @@ export default function CategoriesComponent({ activeCategory, handleChangeCatego
             index={index}
             isActive={activeCategory == item}
             handleChangeCategory={handleChangeCategory}
-
           />
         )}
       />
