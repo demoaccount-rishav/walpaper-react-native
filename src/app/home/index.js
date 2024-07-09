@@ -1,13 +1,14 @@
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { debounce } from 'lodash';
+
 import { FontAwesome6, AntDesign, Octicons } from '@expo/vector-icons';
 import themes from '@/constants/themes';
 import { heightPercentage, widthPercentage } from '@/constants/screenCons';
 import CategoriesComponent from '@/components/categories';
 import CALL_PIXABAY_API from '../../../api/pixabayAPI';
 import ImageGridComponent from '@/components/ImageGrid';
-import { debounce } from 'lodash';
 
 var page = 1;
 
@@ -17,7 +18,7 @@ export default function index() {
     const paddingTop = top > 0 ? top + 10 : 30;
 
     const [activeCategory, setactiveCategory] = useState(null);
-    const [searchText, setsearchText] = useState("");
+    const [searchText, setsearchText] = useState('');
     const [images, setimages] = useState([]);
 
     const searchInputRef = useRef(null);
@@ -26,19 +27,22 @@ export default function index() {
 
     const fetchImages = async (params = { page: 1 }, append = false) => {
 
-        console.log("params: ", params, append);
+        // console.log("params: ", params, append);
 
         let res = await CALL_PIXABAY_API(params);
-        if (res.success && res.data?.hits) {
-            if (images.length > 0) {
+        if (res.success && res?.data?.hits) {
+            if (append) {
                 setimages([...images, res.data.hits])
             } else {
                 setimages([...res.data.hits])
             }
-        } else {
-
         }
         // console.log('results: ', res.data.hits[0]);
+    }
+
+    const clearSearch = () => {
+        setsearchText("");
+        searchInputRef?.current?.clear();
     }
 
     const handleSearch = (text) => {
@@ -48,17 +52,28 @@ export default function index() {
         if (text.length > 2) {
             page = 1;
             setimages([]);
-            fetchImages({ page, q: text });
-        } else if (text == "") {
+            fetchImages({ page, q: text }, false);
+
+        }
+        if (text == "") {
             page = 1;
-            searchInputRef?.current?.clear();
             setimages([]);
-            fetchImages({ page });
+            searchInputRef?.current?.clear();
+            fetchImages({ page }, false);
         }
     }
 
-    const handleChangeCategory = (category) => {
-        setactiveCategory(category);
+
+
+    const handleChangeCategory = (cat) => {
+        setactiveCategory(cat);
+        clearSearch();
+        setimages([]);
+        page = 1;
+        let params = { page, };
+        if (cat) params.category = cat;
+
+        fetchImages(params, false);
     }
 
     useEffect(() => {
@@ -92,7 +107,8 @@ export default function index() {
 
                     <TextInput
                         ref={searchInputRef}
-                        onChangeText={handleSearchUsingDebounce} placeholder='Search...'
+                        onChangeText={handleSearchUsingDebounce}
+                        placeholder='Search for an image...'
                         style={designs.searchInput}
                     />
                     {

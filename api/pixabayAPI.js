@@ -5,7 +5,8 @@ const API_KEY = `44823031-554d099133517634311987024`;
 const API_URL = `https://pixabay.com/api/?key=${API_KEY}`;
 
 const formatURL = (params) => {
-    let URL = API_URL + `&per_page=25&safesearch=true&editors_choice=true`;
+    // let URL = API_URL + `&per_page=20&safesearch=true&editors_choice=false`;
+    let URL = API_URL + `&per_page=20&safesearch=true&editors_choice=true`;
 
     if (!params) {
         return URL;
