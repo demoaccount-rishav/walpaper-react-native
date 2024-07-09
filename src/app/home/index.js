@@ -26,7 +26,7 @@ export default function index() {
 
     const fetchImages = async (params = { page: 1 }, append = false) => {
 
-        // console.log("params: ", params, append);
+        console.log("params: ", params, append);
 
         let res = await CALL_PIXABAY_API(params);
         if (res.success && res.data?.hits) {
@@ -42,24 +42,24 @@ export default function index() {
     }
 
     const handleSearch = (text) => {
+
         setsearchText(text);
+
         if (text.length > 2) {
             page = 1;
             setimages([]);
             fetchImages({ page, q: text });
-        } else if (text == '') {
+        } else if (text == "") {
             page = 1;
             searchInputRef?.current?.clear();
             setimages([]);
             fetchImages({ page });
-
         }
     }
 
     const handleChangeCategory = (category) => {
         setactiveCategory(category);
     }
-
 
     useEffect(() => {
         fetchImages();
@@ -97,7 +97,10 @@ export default function index() {
                     />
                     {
                         searchText && (
-                            <Pressable style={designs.closeIcon} onPress={() => handleSearch('')}>
+                            <Pressable
+                                onPress={() => handleSearch("")}
+                                style={designs.closeIcon}
+                            >
                                 <AntDesign name='close' size={22} color={themes.colors.neutral(0.8)} />
                             </Pressable>
 
