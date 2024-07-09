@@ -16,7 +16,7 @@ export default function CategoryItemComponent({ title, index, isActive, handleCh
             <Pressable
 
                 onPress={() => {
-                    console.log(index);
+                    // console.log(index);
                     handleChangeCategory(isActive ? null : title)
                 }}
 

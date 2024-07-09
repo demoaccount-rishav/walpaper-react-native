@@ -13,10 +13,14 @@ const formatURL = (params) => {
         let paramKeys = Object.keys(params);
         paramKeys.map(key => {
             let value = key == 'q' ? encodeURIComponent(params[key]) : params[key];
+            // console.log("encodeURIComponent(params[key])", encodeURIComponent(params[key]));
             URL += `&${key}=${value}`;
         });
 
         // console.log("Final URL: ", URL);
+        // console.log('from pixabay api');
+        // console.log("params :", params);
+        // console.log("paramKeys :", paramKeys);
         return URL;
     }
 }

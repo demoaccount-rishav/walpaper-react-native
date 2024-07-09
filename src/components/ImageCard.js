@@ -22,7 +22,7 @@ export default function ImageCardComponent({ item, index, numColumns }) {
             <Image
                 style={[styles.image, getImageHeight()]}
                 source={item?.webformatURL}
-                // contentFit="cover"
+                contentFit="cover"
                 transition={1000}
             />
         </Pressable>

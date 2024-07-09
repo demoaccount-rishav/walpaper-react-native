@@ -1,36 +1,33 @@
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
-import React, { useState, useRef, useEffect } from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FontAwesome6, AntDesign, Octicons } from '@expo/vector-icons';
 import themes from '@/constants/themes';
 import { heightPercentage, widthPercentage } from '@/constants/screenCons';
 import CategoriesComponent from '@/components/categories';
 import CALL_PIXABAY_API from '../../../api/pixabayAPI';
 import ImageGridComponent from '@/components/ImageGrid';
+import { debounce } from 'lodash';
+
+var page = 1;
 
 export default function index() {
 
     const top = useSafeAreaInsets().top;
     const paddingTop = top > 0 ? top + 10 : 30;
 
+    const [activeCategory, setactiveCategory] = useState(null);
     const [searchText, setsearchText] = useState("");
     const [images, setimages] = useState([]);
-    const [activeCategory, setactiveCategory] = useState(null);
 
     const searchInputRef = useRef(null);
 
-    console.log('Active Category', activeCategory);
-
-    const handleChangeCategory = (category) => {
-        setactiveCategory(category);
-    }
-
-    useEffect(() => {
-        fetchImages();
-    }, [])
-
+    // console.log('Active Category', activeCategory);
 
     const fetchImages = async (params = { page: 1 }, append = false) => {
+
+        // console.log("params: ", params, append);
+
         let res = await CALL_PIXABAY_API(params);
         if (res.success && res.data?.hits) {
             if (images.length > 0) {
@@ -43,6 +40,34 @@ export default function index() {
         }
         // console.log('results: ', res.data.hits[0]);
     }
+
+    const handleSearch = (text) => {
+        setsearchText(text);
+        if (text.length > 2) {
+            page = 1;
+            setimages([]);
+            fetchImages({ page, q: text });
+        } else if (text == '') {
+            page = 1;
+            searchInputRef?.current?.clear();
+            setimages([]);
+            fetchImages({ page });
+
+        }
+    }
+
+    const handleChangeCategory = (category) => {
+        setactiveCategory(category);
+    }
+
+
+    useEffect(() => {
+        fetchImages();
+    }, [])
+
+    const handleSearchUsingDebounce = useCallback(debounce(handleSearch, 400), []);
+
+
 
     return (
         <View style={[designs.container, { paddingTop }]}>
@@ -64,12 +89,15 @@ export default function index() {
                 {/* Search Bar */}
                 <View style={designs.SearchBar}>
                     <Octicons name="search" size={24} color={themes.colors.neutral(0.4)} />
-                    <TextInput value={searchText} ref={searchInputRef} onChangeText={v => setsearchText(v)} placeholder='Search...' style={designs.searchInput} />
 
-
+                    <TextInput
+                        ref={searchInputRef}
+                        onChangeText={handleSearchUsingDebounce} placeholder='Search...'
+                        style={designs.searchInput}
+                    />
                     {
                         searchText && (
-                            <Pressable style={designs.closeIcon} onPress={() => setsearchText('')}>
+                            <Pressable style={designs.closeIcon} onPress={() => handleSearch('')}>
                                 <AntDesign name='close' size={22} color={themes.colors.neutral(0.8)} />
                             </Pressable>
 
@@ -142,5 +170,5 @@ const designs = StyleSheet.create({
         borderRadius: themes.radius.lg,
 
     },
-    
+
 })
